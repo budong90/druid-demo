@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.eslink.dao.SafeTempPhotoDao">
+    <resultMap type="SafeTempPhoto" id="SafeTempPhotoRM">
+        <result column="photo_key" property="photoKey"/>
+        <result column="photo_url" property="photoUrl"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <sql id="column">
+        photo_key, photo_url, tenant_id, create_time
+    </sql>
+
+    <insert id="insertSafeTempPhoto" parameterType="SafeTempPhoto">
+        insert into safe_temp_photo (
+        <include refid="column"/>
+        )
+        values (#{photoKey}, #{photoUrl}, #{tenantId}, NOW())
+    </insert>
+
+    <insert id="insertList">
+        insert into safe_temp_photo (
+        <include refid="column"/>
+        ) values
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (#{pojo.photoKey}, #{pojo.photoUrl}, #{pojo.tenantId}, #{pojo.createTime})
+        </foreach>
+    </insert>
+
+    <insert id="insertList2">
+        insert into safe_temp_photo2 (
+        <include refid="column"/>
+        ) values
+        <foreach collection="pojos" item="pojo" index="index" separator=",">
+            (#{pojo.photoKey}, #{pojo.photoUrl}, #{pojo.tenantId}, #{pojo.createTime})
+        </foreach>
+    </insert>
+
+    <select id="querySafeTempPhoto" parameterType="string" resultMap="SafeTempPhotoRM">
+        select
+        <include refid="column"/>
+        from safe_temp_photo where photo_key = #{photoKey}
+    </select>
+
+    <select id="querySafeTempPhoto2" parameterType="string" resultMap="SafeTempPhotoRM">
+        select
+        <include refid="column"/>
+        from safe_temp_photo2 where photo_key = #{photoKey}
+    </select>
+
+    <select id="queryKeys" resultType="java.lang.String">
+        select photo_key
+        from safe_temp_photo
+        where create_time BETWEEN #{startTime} AND #{endTime}
+        limit #{offset},#{rows}
+    </select>
+
+    <select id="queryKeys2" resultType="java.lang.String">
+        select photo_key
+        from safe_temp_photo2
+        where create_time BETWEEN #{startTime} AND #{endTime}
+        limit #{offset},#{rows}
+    </select>
+
+</mapper>

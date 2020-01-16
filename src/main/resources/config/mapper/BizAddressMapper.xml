@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.eslink.dao.BizAddressDao">
+
+    <!--&lt;!&ndash;基础实体映射&ndash;&gt;
+    <resultMap id="BaseResultMap" type="BizAddress">
+        &lt;!&ndash;&ndash;&gt;
+        <id property="id" column="id" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="userId" column="user_id" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="userName" column="user_name" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="address" column="address" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="telephone" column="telephone" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="sex" column="sex" />
+        &lt;!&ndash;&ndash;&gt;
+        <result property="createTime" column="create_time" />
+    </resultMap>-->
+
+
+    <!-- 通用查询结果列-->
+    <sql id="Base_Column_List">
+        id, user_id, user_name, address, telephone, sex, create_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.id">
+        INSERT INTO biz_address (id, user_id, user_name, address, telephone, sex, create_time)
+        VALUES (#{pojo.id}, #{pojo.userId}, #{pojo.userName}, #{pojo.address}, #{pojo.telephone}, #{pojo.sex}, now())
+    </insert>
+
+    <insert id="insertList" useGeneratedKeys="true">
+        INSERT INTO biz_address (id, user_id, user_name, address, telephone, sex, create_time)
+        values
+        <foreach collection="list" item="pojo" index="index" separator=",">
+            (#{pojo.id}, #{pojo.userId}, #{pojo.userName}, #{pojo.address}, #{pojo.telephone}, #{pojo.sex}, now())
+        </foreach>
+    </insert>
+
+    <insert id="insertList2" useGeneratedKeys="true">
+        INSERT INTO biz_address2 (id, user_id, user_name, address, telephone, sex, create_time)
+        values
+        <foreach collection="list" item="pojo" index="index" separator=",">
+            (#{pojo.id}, #{pojo.userId}, #{pojo.userName}, #{pojo.address}, #{pojo.telephone}, #{pojo.sex}, now())
+        </foreach>
+    </insert>
+
+    <insert id="insertList3" useGeneratedKeys="true">
+        INSERT INTO biz_address3 (id, user_id, user_sid, user_name, address, telephone, sex, create_time)
+        values
+        <foreach collection="list" item="pojo" index="index" separator=",">
+            (#{pojo.id}, #{pojo.userId}, #{pojo.userSid}, #{pojo.userName}, #{pojo.address}, #{pojo.telephone}, #{pojo.sex}, now())
+        </foreach>
+    </insert>
+
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from biz_user3 a LEFT JOIN biz_address3 b on a.id = b.user_id where a.id > #{id}
+    </select>
+
+    <select id="count3" resultType="java.lang.Integer">
+        select count(1) from biz_user3 a LEFT JOIN biz_address3 b on a.sid = b.user_sid where a.id > #{id}
+    </select>
+
+</mapper>

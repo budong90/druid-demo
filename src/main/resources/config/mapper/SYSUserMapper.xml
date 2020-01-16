@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.eslink.dao.SysUserDAO">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.id">
+        INSERT INTO sys_user (id, user_name, address, telephone, sex, create_time)
+        VALUES (#{pojo.id}, #{pojo.userName}, #{pojo.address}, #{pojo.telephone}, #{pojo.sex}, now())
+    </insert>
+</mapper>

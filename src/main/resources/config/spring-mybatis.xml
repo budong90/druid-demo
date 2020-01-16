@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	                        http://www.springframework.org/schema/beans/spring-beans.xsd
+	                        http://www.springframework.org/schema/context
+	                        http://www.springframework.org/schema/context/spring-context.xsd
+	                        http://www.springframework.org/schema/tx
+	         				http://www.springframework.org/schema/tx/spring-tx.xsd
+	                        http://www.springframework.org/schema/aop
+	                        http://www.springframework.org/schema/aop/spring-aop.xsd
+	                        http://www.springframework.org/schema/util
+	                        http://www.springframework.org/schema/util/spring-util.xsd
+	                        http://www.springframework.org/schema/task
+	        				http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <!--task任务扫描注解 -->
+    <task:annotation-driven />
+
+    <context:annotation-config />
+    <context:component-scan base-package="cc.eslink">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+    <!-- 注解式aop拦截配置 -->
+    <aop:aspectj-autoproxy proxy-target-class="true" />
+
+    <!-- 用于持有ApplicationContext,可以使用SpringContextHolder.getBean('xxxx')的静态方法得到spring bean对象 -->
+    <bean class="cc.eslink.base.spring.SpringContextHolder" lazy-init="false" />
+
+    <!-- 加载数据库连接的资源文件 -->
+    <context:property-placeholder location="classpath*:config/*.properties"/>
+    <!-- 数据源配置 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close">
+        <property name="driverClassName" value="${eslink.db.driver}" />
+        <property name="url" value="${eslink.db.url}" />
+        <property name="username" value="${eslink.db.username}" />
+        <property name="password" value="${eslink.db.password}" />
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${eslink.db.initialSize}"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${eslink.db.maxActive}"></property>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${eslink.db.minIdle}"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${eslink.db.maxWait}"></property>
+        <!-- 定时对线程池链接进行检查 -->
+        <property name="testWhileIdle" value="${eslink.db.whileIdle}"></property>
+        <!--检查时间 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${eslink.db.evictTime}"></property>
+        <!-- 连接时间失效后重连机制 -->
+        <property name="validationQuery" value="${eslink.db.testSql}" />
+        <!-- 检查有效链接 -->
+        <property name="numTestsPerEvictionRun" value="${eslink.db.evictNum}"></property>
+        <property name="minEvictableIdleTimeMillis" value="5000"/>
+        <!-- 连接池过滤 -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="stat-filter" />
+                <ref bean="wall-filter" />
+                <ref bean="log-filter" />
+            </list>
+        </property>
+    </bean>
+
+    <bean id="stat-filter" class="com.alibaba.druid.filter.stat.StatFilter" />
+    <bean id="wall-filter" class="com.alibaba.druid.wall.WallFilter">
+        <property name="dbType" value="sqlserver" />
+        <property name="logViolation" value="true" />
+    </bean>
+    <!--解决mybatis与druid集成后，wallFilter sql注入异常-->
+    <bean id="wall-config" class="com.alibaba.druid.wall.WallConfig">
+        <property name="multiStatementAllow" value="true"/>
+    </bean>
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter">
+        <property name="statementExecutableSqlLogEnable" value="true" />
+        <property name="dataSourceLogEnabled" value="false" />
+        <property name="connectionLogEnabled" value="false" />
+        <property name="statementLogEnabled" value="false" />
+        <property name="resultSetLogEnabled" value="false" />
+    </bean>
+
+    <!-- MyBatis -->
+    <bean id="commonSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="typeAliasesPackage" value="cc.eslink.entity" />
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath*:config/mapper/**/*Mapper.xml"></property>
+        <!-- 分页插件配置（pagehelper） -->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageInterceptor">
+                    <property name="properties">
+                        <!--使用下面的方式配置参数，一行配置一个 -->
+                        <value>
+                            helperDialect=mysql
+                            reasonable=true
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+    <!-- MyBatis 扫描DAO层 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cc.eslink.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="commonSqlSessionFactory"></property>
+    </bean>
+
+    <!-- 事务管理 -->
+    <bean id="commonTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <!-- 配置基于注解@Transactional的声明式事务 -->
+    <tx:annotation-driven transaction-manager="commonTransactionManager" />
+
+</beans>
