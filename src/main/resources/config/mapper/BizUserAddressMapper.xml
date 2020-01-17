@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.eslink.dao.BizUserAddressDao">
+
+    <resultMap type="BizUser0" id="BizUserRM">
+        <result column="user_id" property="userId"/>
+        <result column="out_user_id" property="outUserId"/>
+        <result column="user_no" property="userNo"/>
+        <result column="user_type" property="userType"/>
+        <result column="user_name" property="userName"/>
+        <result column="gender" property="gender"/>
+        <result column="birth_date" property="birthDate"/>
+        <result column="certificate_no" property="certificateNo"/>
+        <result column="certificate_type" property="certificateType"/>
+        <result column="contact_address" property="contactAddress"/>
+        <result column="mobile" property="mobile"/>
+        <result column="telephone" property="telephone"/>
+        <result column="unit_name" property="unitName"/>
+        <result column="unit_type" property="unitType"/>
+        <result column="unit_desc" property="unitDesc"/>
+        <result column="other_info" property="otherInfo"/>
+        <result column="tag_ids" property="tagIds"/>
+        <result column="new_user_flag" property="newUserFlag"/>
+        <result column="state" property="state"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <resultMap type="BizAddress0" id="BizAddressRM">
+        <result column="address_id" property="addressId"/>
+        <result column="out_address_id" property="outAddressId"/>
+        <result column="user_id" property="userId"/>
+        <result column="sort_no" property="sortNo"/>
+        <result column="province" property="province"/>
+        <result column="city" property="city"/>
+        <result column="county" property="county"/>
+        <result column="street" property="street"/>
+        <result column="housing_estate_id" property="housingEstateId"/>
+        <result column="building_no" property="buildingNo"/>
+        <result column="unit_no" property="unitNo"/>
+        <result column="floor_no" property="floorNo"/>
+        <result column="house_no" property="houseNo"/>
+        <result column="address_desc" property="addressDesc"/>
+        <result column="house_space" property="houseSpace"/>
+        <result column="house_cert_no" property="houseCertNo"/>
+        <result column="building_age" property="buildingAge"/>
+        <result column="areas_id" property="areasId"/>
+        <result column="state" property="state"/>
+        <result column="drawup_flag" property="drawupFlag"/>
+        <result column="batch_no" property="batchNo"/>
+        <result column="manage_org" property="manageOrg"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="distribute_flag" property="distributeFlag"/>
+        <result column="origin_pre_id" property="originPreId"/>
+        <result column="update_remark" property="updateRemark"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+    </resultMap>
+
+    <resultMap type="BizMeter0" id="BizMeterRM">
+        <result column="meter_id" property="meterId"/>
+        <result column="out_meter_id" property="outMeterId"/>
+        <result column="user_id" property="userId"/>
+        <result column="address_id" property="addressId"/>
+        <result column="meter_no" property="meterNo"/>
+        <result column="meter_type" property="meterType"/>
+        <result column="meter_model" property="meterModel"/>
+        <result column="meter_standard" property="meterStandard"/>
+        <result column="meter_seal_no" property="meterSealNo"/>
+        <result column="gas_type" property="gasType"/>
+        <result column="manufactor" property="manufactor"/>
+        <result column="product_date" property="productDate"/>
+        <result column="install_date" property="installDate"/>
+        <result column="install_seat" property="installSeat"/>
+        <result column="durable_years" property="durableYears"/>
+        <result column="inlet_direction" property="inletDirection"/>
+        <result column="most_flow" property="mostFlow"/>
+        <result column="start_meter_num" property="startMeterNum"/>
+        <result column="init_meter_num" property="initMeterNum"/>
+        <result column="tem_comp_type" property="temCompType"/>
+        <result column="tem_comp_coeff" property="temCompCoeff"/>
+        <result column="gas_environment" property="gasEnvironment"/>
+        <result column="fixed_mode" property="fixedMode"/>
+        <result column="card_way" property="cardWay"/>
+        <result column="card_no" property="cardNo"/>
+        <result column="total_buygas_count" property="totalBuygasCount"/>
+        <result column="total_buygas_quantity" property="totalBuygasQuantity"/>
+        <result column="last_buy_date" property="lastBuyDate"/>
+        <result column="last_buy_quantity" property="lastBuyQuantity"/>
+        <result column="last_meterread_num" property="lastMeterreadNum"/>
+        <result column="state" property="state"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="start_use_time" property="startUseTime"/>
+    </resultMap>
+
+	<sql id="insert_user" >
+		user_id, out_user_id,user_no, user_type, user_name, gender, birth_date, certificate_no, certificate_type, contact_address,
+     	contact_user,mailbox,
+     	mobile, telephone, unit_name, unit_type, unit_desc, state,
+     	other_info,tag_ids,new_user_flag,
+     	tenant_id, create_time, modify_time
+	</sql>
+
+	<insert id="insertUser" parameterType="BizUser0" >
+		insert into biz_user (
+		<include refid="insert_user" />
+		)
+		values (#{userId},#{outUserId}, #{userNo}, #{userType},#{userName}, #{gender}, #{birthDate},#{certificateNo}, #{certificateType}, #{contactAddress},
+		#{contactUser},#{mailbox},
+		#{mobile}, #{telephone}, #{unitName},#{unitType}, #{unitDesc}, #{state},
+		#{otherInfo}, #{tagIds},#{newUserFlag},
+		#{tenantId}, NOW(), NOW())
+	</insert>
+
+	<sql id="insert_address">
+		address_id,out_address_id, user_id, sort_no,sort_no_not_numeric, province, city, county,
+		street, housing_estate_id,
+		building_no,
+		unit_no, floor_no, house_no,
+		address_desc, house_space, house_cert_no,
+		building_age, areas_id,hide_flag,
+		state,drawup_flag,distribute_flag, tenant_id,
+		source_type,audit_state,confirm_state,
+		open_date, gas_type,cn_flag,cct_flag,
+		address_type,origin_pre_id,
+		 create_time, modify_time
+	</sql>
+
+	<insert id="insertAddress" parameterType="BizAddress0">
+		insert into biz_address (
+		<include refid="insert_address" />
+		)
+		values (#{addressId},  #{outAddressId},#{userId}, #{sortNo},#{sortNoNotNumeric},#{province}, #{city},
+		#{county},#{street}, #{housingEstateId}, #{buildingNo},
+		#{unitNo},
+		#{floorNo}, #{houseNo},#{addressDesc}, #{houseSpace}, #{houseCertNo},
+		#{buildingAge}, #{areasId},  #{hideFlag},
+		#{state},#{drawupFlag},#{distributeFlag}, #{tenantId},
+		#{sourceType},#{auditState}, #{confirmState},
+		#{openDate}, #{gasType},
+		#{cnFlag}, #{cctFlag},#{addressType},#{originPreId},
+		#{createTime},
+		NOW())
+	</insert>
+
+	<sql id="insert_meter" >
+		meter_id, out_meter_id,user_id, address_id, meter_no, meter_type, meter_model, meter_standard, gas_type, manufactor,
+     	product_date, install_date, install_seat, durable_years, inlet_direction, most_flow, start_meter_num, init_meter_num,
+     	tem_comp_type, tem_comp_coeff, gas_environment, fixed_mode, card_way, card_no, total_buygas_count, total_buygas_quantity,
+     	last_buy_date, last_buy_quantity,last_meterread_num,
+     	meter_steel_no,meter_seal_no,start_use_time,
+     	state, tenant_id, create_time, modify_time
+	</sql>
+
+	<insert id="insertMeter" parameterType="BizMeter0" >
+		insert into biz_meter (
+		<include refid="insert_meter" />
+		)
+		values (#{meterId}, #{outMeterId},#{userId}, #{addressId},#{meterNo}, #{meterType}, #{meterModel},#{meterStandard}, #{gasType}, #{manufactor},
+		#{productDate}, #{installDate}, #{installSeat},#{durableYears}, #{inletDirection}, #{mostFlow}, #{startMeterNum}, #{initMeterNum},
+		#{temCompType}, #{temCompCoeff}, #{gasEnvironment}, #{fixedMode}, #{cardWay}, #{cardNo}, #{totalBuygasCount}, #{totalBuygasQuantity},
+		#{lastBuyDate},  #{lastBuyQuantity},#{lastMeterreadNum},
+		#{meterSteelNo},  #{meterSealNo},#{startUseTime},
+		#{state}, #{tenantId}, NOW(), NOW())
+	</insert>
+
+	<select id="queryUserList" resultMap="BizUserRM">
+		select * from biz_user where tenant_id like concat(#{tenantId},'%') order by rand()*1000, 20
+	</select>
+
+	<select id="queryMeterList" resultMap="BizMeterRM">
+		select * from biz_meter where tenant_id like concat(#{tenantId},'%') order by rand()*1000, 20
+	</select>
+
+	<select id="queryUserAddressList" resultType="hashmap">
+		select * from biz_user a,biz_address b
+		where a.tenant_id = b.tenant_id and a.user_id = b.user_id
+		and a.tenant_id like concat(#{tenantId},'%')
+		order by rand()*1000, 20
+	</select>
+
+	<select id="queryUserDetailList" resultType="hashmap">
+		select * from biz_user a,biz_address b,biz_meter c
+		where a.tenant_id = b.tenant_id and a.user_id = b.user_id
+		and b.tenant_id = c.tenant_id and b.address_id = c.address_id
+		and a.tenant_id like concat(#{tenantId},'%') order by rand()*1000, 20
+	</select>
+
+	<select id="getUser" resultMap="BizUserRM">
+		select * from biz_user a where a.user_id = #{userId}
+	</select>
+
+	<select id="getUserByTenant" resultMap="BizUserRM">
+		select * from biz_user a where a.tenant_id = #{tenantId} and a.user_id = #{userId}
+	</select>
+
+	<select id="getMeter" resultMap="BizMeterRM">
+		select * from biz_meter a where a.meter_id = #{meterId}
+	</select>
+
+	<select id="getMeterByTenant" resultMap="BizMeterRM">
+		select * from biz_meter a where a.tenant_id = #{tenantId} and a.meter_id = #{meterId}
+	</select>
+</mapper>

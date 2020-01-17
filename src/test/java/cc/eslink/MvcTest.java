@@ -4,6 +4,7 @@ import cc.eslink.dao.BizAddressDao;
 import cc.eslink.dao.BizUserDao;
 import cc.eslink.dao.SafeTempPhotoDao;
 import cc.eslink.entity.*;
+import cc.eslink.entity.BizAddress0;
 import cc.eslink.util.IDUtil;
 import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +87,7 @@ public class MvcTest extends BaseTest {
     public void saveList2() throws Exception {
         int per = 1000;
         List<BizUser2> userList = new ArrayList<>(per);
-        List<BizAddress2> addrList = new ArrayList<>(per);
+        List<BizAddress0> addrList = new ArrayList<>(per);
         int i = 1, count = 1;
         for (; i < total; i++) {
             int rdm = RANDOM.nextInt(per);
@@ -99,7 +99,7 @@ public class MvcTest extends BaseTest {
             bizUser.setId(IDUtil.getUniqueId());
             userList.add(bizUser);
 
-            BizAddress2 bizAddress = new BizAddress2();
+            BizAddress0 bizAddress = new BizAddress0();
             BeanUtils.copyProperties(bizAddress, bizUser);
             bizAddress.setId(IDUtil.getUniqueId());
             bizAddress.setUserId(bizUser.getId());
@@ -310,5 +310,12 @@ public class MvcTest extends BaseTest {
     public static int getRdm(int min, int max) {
         Random random = new Random();
         return random.nextInt(max) % (max - min + 1) + min;
+    }
+
+    @Test
+    public void testQuery3() {
+        String photoKey = "000003b0-81ed-405e-895e-afce5f069f6b.jpg";
+        SafeTempPhoto safeTempPhoto = safeTempPhotoDao.querySafeTempPhoto(photoKey);
+        System.out.println(safeTempPhoto);
     }
 }

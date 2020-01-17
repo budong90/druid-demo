@@ -37,7 +37,7 @@ public class BizUser {
 	/**  */
 	private String createTime;
 
-	//=================================================
+    //=================================================
 
 	public void setId(Integer id){
 		this.id = id;

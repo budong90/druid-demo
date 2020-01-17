@@ -1,6 +1,8 @@
 package cc.eslink.controller;
 
 import cc.eslink.base.spring.SpringContextHolder;
+import cc.eslink.dao.SafeTempPhotoDao;
+import cc.eslink.entity.SafeTempPhoto;
 import cc.eslink.entity.SysUser;
 import cc.eslink.service.SysUserService;
 import com.alibaba.druid.pool.DruidDataSource;
@@ -65,5 +67,15 @@ public class TestController {
     @RequestMapping("/druid/stop")
     public void stopCount() {
         loop = false;
+    }
+
+    @Resource
+    private SafeTempPhotoDao safeTempPhotoDao;
+
+    @RequestMapping("/query")
+    public void queryPhoto() {
+        String photoKey = "000003b0-81ed-405e-895e-afce5f069f6b.jpg";
+        SafeTempPhoto safeTempPhoto = safeTempPhotoDao.querySafeTempPhoto(photoKey);
+        System.out.println(safeTempPhoto);
     }
 }

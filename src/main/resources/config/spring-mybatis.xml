@@ -97,6 +97,7 @@
                         </value>
                     </property>
                 </bean>
+                <bean class="cc.eslink.service.MyInterceptor"/>
             </array>
         </property>
     </bean>
